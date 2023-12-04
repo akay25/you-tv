@@ -5,7 +5,6 @@ import { onMounted, ref } from "vue";
 import { getVideoData } from "@/api/main";
 import { IVideoDetail } from "@/types/video";
 import { ISubtitleURL, IVideoURL } from "./types/VideoPlayer";
-import VideoPlayer from "@/components/VideoPlayer.vue";
 const videoData = ref<IVideoDetail | null>(null);
 const videoURLs = ref<IVideoURL[]>([]);
 const subtitlsURLs = ref<ISubtitleURL[]>([]);
@@ -47,7 +46,6 @@ onMounted(async () => {
   console.log("Video data fetched: ", videoData.value);
 });
 </script>
-
 <template>
   <div class="body">
     <div class="loading" v-if="videoData === null">
@@ -59,11 +57,37 @@ onMounted(async () => {
         Uploader: {{ videoData.uploader.name }}
       </div>
       <div class="video-player">
-        <video-player :videoURLs="videoURLs" :subtitles="subtitlsURLs" :muted="false" :thumbnail="videoThumbnail" />
+        <!-- Video player with title overlay -->
+        <div class="video-title-overlay">{{ videoData.title }}</div>
+        <video :src="videoURLs[0]?.url" controls muted :poster="videoThumbnail" class="video-element"></video>
       </div>
       <div class="sidebar">
-        chat vindow whil go here
+        Chat Window will go here
       </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+.video-player {
+  position: relative;
+}
+
+.video-element {
+  width: 100%;
+  height: auto;
+  z-index: 1; /* Ensure the video is above the overlay */
+}
+
+.video-title-overlay {
+  position: absolute;
+  top: 10px; /* Adjust as needed */
+  left: 10px; /* Adjust as needed */
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+  color: white;
+  padding: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  z-index: 2; /* Ensure the overlay is above the video */
+}
+</style>
