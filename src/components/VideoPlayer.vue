@@ -125,7 +125,7 @@ onMounted(() => {
 });
 
 defineExpose({
-  player, options
+  player , options
 })
 </script>
 
